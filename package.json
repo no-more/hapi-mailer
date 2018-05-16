@@ -78,26 +78,26 @@
     "url": "https://github.com/trippnology/hapi-mailer/issues"
   },
   "dependencies": {
-    "hoek": "3.0.x",
-    "items": "2.0.x",
-    "joi": "7.0.x",
-    "juice": "1.7.x",
-    "nodemailer": "1.10.x",
-    "nodemailer-plugin-inline-base64": "1.0.x"
+    "hoek": "^5.0.3",
+    "items": "^2.1.1",
+    "joi": "^13.2.0",
+    "juice": "^4.2.3",
+    "nodemailer": "^4.6.4",
+    "nodemailer-plugin-inline-base64": "^2.1.1"
   },
   "description": "Mailer plugin for hapi.",
   "devDependencies": {
     "@nesive/eslint-config": "1.x.x",
-    "code": "2.0.x",
-    "handlebars": "4.0.x",
-    "hapi": "11.1.x",
-    "lab": "7.3.x",
-    "nodemailer-stub-transport": "1.0.x",
-    "sinon": "1.17.x",
-    "vision": "4.0.x"
+    "code": "^5.2.0",
+    "handlebars": "^4.0.11",
+    "hapi": "^17.4.0",
+    "lab": "^15.4.5",
+    "nodemailer-stub-transport": "^1.1.0",
+    "sinon": "^5.0.7",
+    "vision": "^5.3.2"
   },
   "gitHead": "667fd5b1a709bef6c86f2a52a3b338d7387eae7b",
-  "homepage": "https://github.com/trippnology/hapi-mailer",
+  "homepage": "https://github.com/no-more/hapi-mailer",
   "keywords": [
     "hapi",
     "plugin",
@@ -107,17 +107,17 @@
   ],
   "license": "MIT",
   "main": "src/index.js",
-  "name": "@trippnology/hapi-mailer",
+  "name": "@no-more/hapi-mailer",
   "optionalDependencies": {},
   "peerDependencies": {
-    "hapi": ">=10.0.0",
-    "vision": ">=4.0.0"
+    "hapi": ">=17.0.0",
+    "vision": ">=5.0.0"
   },
   "readme": "# Hapi Mailer\r\n\r\n[![npm](https://img.shields.io/npm/v/@trippnology/hapi-mailer.svg)](https://www.npmjs.com/package/@trippnology/hapi-mailer)\r\n[![Build Status](https://travis-ci.org/trippnology/hapi-mailer.svg?branch=master)](https://travis-ci.org/trippnology/hapi-mailer)\r\n[![Dependency Status](https://david-dm.org/trippnology/hapi-mailer.svg)](https://david-dm.org/trippnology/hapi-mailer)\r\n\r\nA wrapper around Nodemailer used for sending email. It can be used with or without a template engine.\r\n\r\n## Installation\r\n\r\n```\r\nnpm install --save @trippnology/hapi-mailer\r\n```\r\n\r\n## Usage\r\n\r\n### Server configuration:\r\n\r\nThe plugin accepts the following configuration options:\r\n\r\n* `transport`: A Nodemailer transport mechanism. If it is not set `nodemailer-direct-transport` transport is used. If it is a regular object `nodemailer-smtp-transport` is used and the value is passed as SMTP configuration.\r\n* `views`: The views configuration as described in the server's [`views`](https://github.com/hapijs/vision/blob/master/API.md#serverviewsoptions) option. Note that due to the way node `require()` operates, plugins must require rendering engines directly and pass the engine using the `engines.module` option. Note that relative paths are relative to the plugin root, not the working directory or the application registering the plugin.\r\n* `inlineImages`: A boolean value to convert Base64 images to attachments. Defaults to `true`.\r\n* `inlineStyles`: A boolean value to inline CSS in `<style>` tags. Defaults to `true`.\r\n\r\n**Example:**\r\n\r\n```\r\nconst Handlebars = require('handlebars');\r\nconst Path = require('path');\r\nconst Vision = require('vision');\r\n\r\nconst HapiMailer = {\r\n  register: require('@trippnology/hapi-mailer'),\r\n  options: {\r\n    transport: {\r\n      service: 'Gmail',\r\n      auth: {\r\n        user: 'example@gmail.com',\r\n        pass: 'password'\r\n      }\r\n    },\r\n    views: {\r\n      engines: {\r\n        html: {\r\n          module: Handlebars.create(),\r\n          path: Path.join(__dirname, 'src/views/emails')\r\n        }\r\n      }\r\n    }\r\n  }\r\n};\r\n\r\nserver.register([Vision, HapiMailer], (err) => {\r\n  // ...\r\n});\r\n\r\n```\r\n\r\n### Handler:\r\n\r\nIn handlers, the `Mailer` object can be accessed as `request.server.plugins['hapi-mailer']`. It has a `send()` function which can be used to send an email. It accepts the following configuration options:\r\n\r\n* `data`: Defines the mail content the same way as Nodemailer. There is only one additional property `context`, which is an optional object used by the template to render context-specific result.\r\n* `callback`: It is a callback function to run once the message is delivered or it failed.\r\n\r\n**Example:**\r\n\r\n```\r\nconst handler = function(request, reply) {\r\n  const data = {\r\n    from: 'example@gmail.com',\r\n    to: 'to@example.com',\r\n    subject: 'Example Subject',\r\n    html: {\r\n      path: 'handlebars.html'\r\n    },\r\n    context: {\r\n      name: 'Example User'\r\n    }\r\n  };\r\n\r\n  const Mailer = request.server.plugins['hapi-mailer'];\r\n  Mailer.send(data, (err, info) => reply());\r\n};\r\n\r\nserver.route({ method: 'POST', path: '/', handler: handler });\r\n```\r\n",
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trippnology/hapi-mailer.git"
+    "url": "git+https://github.com/no-more/hapi-mailer.git"
   },
   "scripts": {
     "test": "lab --assert code --lint --threshold 100 --verbose"
