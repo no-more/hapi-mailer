@@ -5,6 +5,7 @@ const Fs = require('fs');
 const Hoek = require('hoek');
 const Items = require('items');
 const Joi = require('joi');
+const Boom = require('boom');
 const Juice = require('juice');
 const Nodemailer = require('nodemailer');
 const NodemailerPluginInlineBase64 = require('nodemailer-plugin-inline-base64');
